@@ -1,0 +1,278 @@
+
+<html> 
+<h4>
+
+  <%= form_tag( '/show', :method => :get,:id => 'dateform' ) do%>
+ <label>Controller I'd:</label> <input type="text" id="ctrlrid" name="ctrlrid" style="width:120px" value=<%= @ctrlrid %>>&nbsp;&nbsp;&nbsp;&nbsp;
+  <label>From Date:</label> <input  type="text" id="fromdate" name="fromdate" style="width:100px" value=<%= @fromdate %>> &nbsp;&nbsp;
+  <label>To Date:</label> <input type="text" id="todate" name="todate" style="width:100px" value=<%= @todate %>>
+ <button id="search"  type="button">Search</button>
+  <%end%>
+<br/>
+
+<script>
+ $(function(){
+      $("#fromdate").datepicker({
+         dateFormat: 'yy-mm-dd',
+        //changeMonth: true,
+        // changeYear: true,
+       onSelect: function(dateText) {
+       // alert();
+       //$("#dateform").submit();
+      }
+   });
+});
+ 
+
+
+ $(function(){
+      $("#todate").datepicker({
+         dateFormat: 'yy-mm-dd',
+         onSelect: function(dateText) {
+         // alert();
+       //  $("#dateform").submit();
+       }
+   });
+});
+
+$(
+    function(){
+     
+        $('#search').click(function(){
+                               
+                   $("#dateform").submit();  
+        });
+        
+    }
+);
+
+</script>
+<div id="canvas-holder" style="width:400">
+<canvas id="myChart3" width="400" height="185"></canvas>
+</div>
+
+<script>
+
+//<button id="pre">previous</button>
+//<button id="next">next</button>
+var curentpage=1;
+var graphtimear;
+var graphdate;
+var graphavalue1;
+var graphavalue2;
+var graphavalue3;
+var graphavalue4;
+var graphavalue5;
+var graphavalue6;
+var ctx ;
+var myChart3 ;
+$(function(){
+      
+     
+      drawgraph();
+      initializegraphdata();
+      
+      window.myChart3.update();
+      $("#next").on("click",function(){
+            curentpage=curentpage+100;
+            if(curentpage>=avalue1.length){
+                  curentpage=curentpage-100;
+            }
+            //console.log(curentpage);
+            updategraph();
+      });
+      $("#pre").on("click",function(){
+            curentpage=curentpage-100;
+            if(curentpage<=0){
+                  curentpage=1;
+            }
+            //console.log(curentpage);
+            updategraph();
+      });
+});
+function initializegraphdata(){
+      myChart3.config.data.datasets[0].data=avalue1.slice(curentpage,curentpage+100);
+     // myChart3.config.data.labels1=timearr.slice(curentpage,curentpage+100);
+
+      myChart3.config.data.labels=datearr.slice(curentpage,curentpage+100);
+
+      myChart3.config.data.datasets[1].data=avalue2.slice(curentpage,curentpage+100);
+      myChart3.config.data.datasets[2].data=avalue3.slice(curentpage,curentpage+100);
+      myChart3.config.data.datasets[3].data=avalue4.slice(curentpage,curentpage+100);
+      myChart3.config.data.datasets[4].data=avalue5.slice(curentpage,curentpage+100);
+	myChart3.config.data.datasets[5].data=avalue6.slice(curentpage,curentpage+100);
+      window.myChart3.update();
+
+}
+function updategraph(){
+      //myChart3.destroy();
+      //console.log(myChart3.config.data.labels);
+      //console.log(myChart3.config.data.datasets[0].data);
+      //var temp=voltary.slice(curentpage,10);
+      //console.log(voltary.slice(curentpage,curentpage+100));
+      //console.log(voltary.slice(curentpage,curentpage+100));
+      myChart3.config.data.datasets[0].data=avalue1.slice(curentpage,curentpage+100);
+      //myChart3.config.data.labels1=timearr.slice(curentpage,curentpage+100);
+ myChart3.config.data.labels=datearr.slice(curentpage,curentpage+100);
+
+      myChart3.config.data.datasets[1].data=avalue2.slice(curentpage,curentpage+100);
+      myChart3.config.data.datasets[2].data=avalue3.slice(curentpage,curentpage+100);
+      myChart3.config.data.datasets[3].data=avalue4.slice(curentpage,curentpage+100);
+      myChart3.config.data.datasets[4].data=avalue5.slice(curentpage,curentpage+100);
+      myChart3.config.data.datasets[5].data=avalue6.slice(curentpage,curentpage+100);
+      window.myChart3.update();
+}
+
+var avalue1=<%= raw(@avalue1) %>;
+
+var timearr=<%= raw(@timearray) %>;
+var datearr=<%= raw(@datearray) %>;
+
+var avalue2=<%= raw(@avalue2) %>;
+var avalue3=<%= raw(@avalue3) %>;
+var avalue4=<%= raw(@avalue4) %>;
+var avalue5=<%= raw(@avalue5) %>;
+var avalue6=<%= raw(@avalue6) %>;
+//console.log(ctx);
+
+function drawgraph(){
+       ctx = document.getElementById("myChart3").getContext('2d');
+       myChart3 = new Chart(ctx, {
+          type: 'line',
+          zoomType: 'x',
+
+          data: {
+                  labels: [], 
+                   datasets: [{
+                   label: 'Pressure',
+                   yAxisID: 'B',
+                   fill: false,
+                   backgroundColor: "rgba(75,192,192,0.4)",
+                   borderColor: "rgba(75,192,192,5)",
+                   data: [],
+                },
+                {
+                   label: 'Temprerature',
+                   yAxisID: 'B',
+                   fill: false,
+                   lineTension: 0.3,
+                   backgroundColor: "rgba(80,30,30,0.4)",
+                   borderColor: "rgba(80,30,30,5)",
+                   data: [],     
+                },
+                {
+                   label: 'Fuel in ltr',
+                   yAxisID: 'B',
+                   fill: false,
+                   lineTension: 0.3,
+                   backgroundColor: "rgba(0,120,90,0.4)",
+                   borderColor: "rgba(0,120,90,5)",
+                   data: [],    
+                },
+                {
+                   label: 'Battery Voltage',
+                   yAxisID: 'B',
+                   fill: false,
+                   lineTension: 0.1,
+                   backgroundColor: "rgba(152,10,170,0.4)",
+                   borderColor: "rgba(152,10,170,5)",
+                   pointColor : "rgba(60,91,87,1)",
+                   data: [],     
+                },
+ {
+                   label: 'Run Hours',
+                   yAxisID: 'B',
+                   fill: false,
+                   lineTension: 0.1,
+                   backgroundColor: "rgba(255,255,0,0.4)",
+                   borderColor: "rgba(255,255,0,5)",
+                   pointColor : "rgba(60,91,87,1)",
+                   data: [],     
+                },
+ {
+                   label: 'RPM',
+                   yAxisID: 'A',
+                   fill: false,
+                   lineTension: 0.1,
+                   backgroundColor: "rgba(0,0,255,0.4)",
+                   borderColor: "rgba(0,0,255,5)",
+                   pointColor : "rgba(60,91,87,1)",
+                   data: [],     
+                }]
+          },
+      
+          options: {
+ 		   tooltips: {
+         		   mode : 'label'
+    			   },
+                   legend: {
+                            display: true,
+                            position: 'top',
+                   labels: {
+                            fontColor: "#000080",
+                           }
+                          },
+          scales: {
+                   xAxis: [{
+                            type: 'time',
+                    time: {
+                            unit: 'day',
+		
+                           }                 
+                          }],
+      
+                  yAxes: [{
+                            id: 'A',
+                            type: 'linear',
+                            position: 'left',
+                  ticks: {
+                            beginAtZero: true
+                         }
+                       }, {
+                            id: 'B',
+                            type: 'linear',
+                            position: 'right',
+                  ticks: {
+                            beginAtZero: true
+                         }
+                   }]
+              }
+          }
+     });
+}
+
+</script>
+
+
+<script>
+    $( function(myChart) {
+          var totalrecord =datearr.length;
+          //console.log(totalrecord);
+          var recordtobeploted=1;
+          var step=100/((totalrecord-recordtobeploted)/recordtobeploted);
+          $( "#slider" ).slider({
+             slide: function(event, ui) {
+             startvalue=(Math.round(ui.value/step)*recordtobeploted);
+             endvalue=startvalue+100;
+             updateslide();
+      }
+      
+    });
+});
+
+function updateslide()
+{
+ myChart3.config.data.datasets[0].data=avalue1.slice(startvalue,endvalue);
+ myChart3.config.data.labels=datearr.slice(startvalue,endvalue);
+ myChart3.config.data.datasets[1].data=avalue2.slice(startvalue,endvalue);
+ myChart3.config.data.datasets[2].data=avalue3.slice(startvalue,endvalue);
+ myChart3.config.data.datasets[3].data=avalue4.slice(startvalue,endvalue);
+ myChart3.config.data.datasets[4].data=avalue5.slice(startvalue,endvalue);
+ myChart3.config.data.datasets[5].data=avalue6.slice(startvalue,endvalue);
+
+ window.myChart3.update();
+}
+</script>
+<div id="slider"></div>
+
+</html>
